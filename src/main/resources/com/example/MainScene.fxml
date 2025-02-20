@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainController">
+<Pane fx:id="table" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.MainController">
    <children>
       <TextField fx:id="height" layoutX="108.0" layoutY="64.0" />
       <TextField fx:id="result" layoutX="108.0" layoutY="209.0" />
@@ -16,11 +16,11 @@
       <Label layoutX="42.0" layoutY="68.0" text="Magasság" />
       <Label layoutX="65.0" layoutY="131.0" text="Sugár" />
       <Label layoutX="42.0" layoutY="213.0" text="Eredmény" />
-      <TableView layoutX="361.0" layoutY="80.0" prefHeight="200.0" prefWidth="233.0">
+      <TableView fx:id="tableView" layoutX="361.0" layoutY="80.0" prefHeight="200.0" prefWidth="233.0">
         <columns>
-          <TableColumn prefWidth="75.0" text="Magasság" />
-          <TableColumn prefWidth="75.0" text="Sugár" />
-            <TableColumn prefWidth="75.0" text="Eredmény" />
+          <TableColumn fx:id="heightColumn" text="Height"/>
+          <TableColumn fx:id="radiusColumn" text="Radius"/>
+          <TableColumn fx:id="resultColumn" text="Result"/>
         </columns>
       </TableView>
       <Label layoutX="430.0" layoutY="47.0" text="Eddigi számítások" />

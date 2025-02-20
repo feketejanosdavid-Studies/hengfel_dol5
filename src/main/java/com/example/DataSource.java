@@ -1,56 +1,48 @@
 package com.example;
 
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DataSource {
-    public ArrayList<Calculations> getCalculations() {
-        try {
-            return tryGetCalculations();
+    private static final String URL = "jdbc:mariadb://localhost:3306/hengfeldb";
+    private static final String USER = "root";
+    private static final String PASSWORD = "admin";
+
+    public void addCalculation(Calculations calc) {
+        String sql = "INSERT INTO calcs (height, radius, surface) VALUES (?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setDouble(1, calc.getHeight());
+            pstmt.setDouble(2, calc.getRadius());
+            pstmt.setDouble(3, calc.getSurface());
+            pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            return null;
+            e.printStackTrace();
         }
     }
 
-    public ArrayList<Calculations> tryGetCalculations() throws SQLException {
-        Mariadb mariadb = new Mariadb();
-        Connection conn = mariadb.connect();
-        if (conn != null) {
-            String sql = "SELECT * FROM hengfeldb";
-            java.sql.Statement stmt = conn.createStatement();
-            java.sql.ResultSet rs = stmt.executeQuery(sql);
-            ArrayList<Calculations> calculations = new ArrayList<Calculations>();
+    public List<Calculations> getAllCalculations() {
+        List<Calculations> calculations = new ArrayList<>();
+        String sql = "SELECT height, radius, surface FROM calcs";
+
+        try (Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
-                Calculations calc = new Calculations();
-                calc.id = rs.getInt("id");
-                calc.height = rs.getDouble("height");
-                calc.radius = rs.getDouble("radius");
-                calc.surface = rs.getDouble("surface");
-                calculations.add(calc);
+                double height = rs.getDouble("height");
+                double radius = rs.getDouble("radius");
+                double surface = rs.getDouble("surface");
+
+                calculations.add(new Calculations(height, radius, surface));
             }
-            return calculations;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return null;
-    }
 
-    public void addCalculation(Calculations e) {
-        try {
-            tryAddCalculation(e);
-        } catch (SQLException ex) {
-            System.err.println(ex.getMessage());
-        }
-    }
-
-    public void tryAddCalculation(Calculations calc) throws SQLException {
-        Mariadb mariadb = new Mariadb();
-        Connection conn = mariadb.connect();
-        if (conn != null) {
-            String sql = "INSERT INTO hengfeldb (height, radius, surface)"+ "VALUES ('"+ calc.height + "', '" + calc.radius + "', '" + calc.surface + "')";
-            java.sql.Statement stmt = conn.createStatement();
-            stmt.executeUpdate(sql);
-            
-        }
+        return calculations;
     }
 }

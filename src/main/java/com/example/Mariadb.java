@@ -13,6 +13,8 @@ public class Mariadb {
             System.err.println(e.getMessage());
             return null;
         }
+
+        
     }
     private Connection tryConnect() throws SQLException {
         String user = "root";
